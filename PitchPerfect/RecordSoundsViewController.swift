@@ -9,6 +9,8 @@
 import UIKit
 import AVFoundation
 
+// MARK: - RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate
+
 class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     var audioRecorder: AVAudioRecorder!
@@ -19,7 +21,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        stopRecordingButton.isEnabled = false
+        configureUI(.notRecording)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,9 +32,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     // MARK: Record Audio
     
     @IBAction func recordAudio(_ sender: Any) {
-        recordingLabel.text = "Recording in Progress"
-        stopRecordingButton.isEnabled = true
-        recordButton.isEnabled = false
+        configureUI(.recording)
         
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
@@ -53,16 +53,14 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     // MARK: Stop recording audio
     
     @IBAction func stopRecording(_ sender: Any) {
-        recordButton.isEnabled = true
-        stopRecordingButton.isEnabled = false
-        recordingLabel.text = "Tap to Record"
+        configureUI(.notRecording)
         
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
     }
     
-    // MARK: Make sure recorder finished recording to send to PlaySoundsVC
+    // MARK: If recorder finished recording succesfully, send audio to PlaySoundsVC
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag {
