@@ -27,6 +27,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         print("viewWillAppear called")
     }
     
+    // MARK: Record Audio
+    
     @IBAction func recordAudio(_ sender: Any) {
         recordingLabel.text = "Recording in Progress"
         stopRecordingButton.isEnabled = true
@@ -48,6 +50,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.record()
     }
     
+    // MARK: Stop recording audio
+    
     @IBAction func stopRecording(_ sender: Any) {
         recordButton.isEnabled = true
         stopRecordingButton.isEnabled = false
@@ -58,6 +62,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         try! audioSession.setActive(false)
     }
     
+    // MARK: Make sure recorder finished recording to send to PlaySoundsVC
+    
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag {
             performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
@@ -65,6 +71,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             print("recording was not successful")
         }
     }
+    
+    // MARK: Send the audio to PlaySoundsVC
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "stopRecording" {
